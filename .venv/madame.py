@@ -6,7 +6,10 @@ from PIL import Image,ImageEnhance,ImageOps
 import pyautogui
 import time
 import pandas as pd
-from random import random
+import random
+from datetime import datetime as dt
+from datetime import timedelta as td
+from mousebez import *
 
 dir= r'C:\Users\name\PycharmProjects\pythonProject'
 pytesseract.pytesseract.tesseract_cmd =r'C:\Program Files\Tesseract-OCR\tesseract.exe'
@@ -17,7 +20,20 @@ num_coords = [(0, 0), (182, 0), (364, 0), (545, 0),
               (0, 280), (182, 280), (364, 280), (545, 280)]
 cycles = 1
 
+#%%
+mouse = MouseUtils()
+# cords = (500, 500)
+# mouse.move_to(cords, mouseSpeed='slow', knotsCount=1)
 
+# # Any duration less than this is rounded to 0.0 to instantly move the mouse.
+# pyautogui.MINIMUM_DURATION = 0  # Default: 0.1
+# # Minimal number of seconds to sleep between mouse moves.
+# pyautogui.MINIMUM_SLEEP = 0  # Default: 0.05
+# # The number of seconds to pause after EVERY public function call.
+# pyautogui.PAUSE = 0  # Default: 0.1
+
+
+#%%
 def loadImage(path):
     needleFileObj = open(path, 'rb')
     needleImage = Image.open(needleFileObj)
@@ -38,13 +54,13 @@ duck2  = duck.transpose(method=Image.FLIP_LEFT_RIGHT)
 #%%
 def initcoords(num_coords):
 #%%
-    x = 191
+    x = 187
     y= 1156
-    num_coords = [(0, 0), (182, 0), (364, 0), (545, 0),
-                  (1, 141), (182, 141), (364, 141), (545, 141),
-                  (1, 280), (182, 280), (364, 280), (545, 280)]
+    num_coords = [(0, 0), (181, 0), (363, 0), (544, 0),
+                  (0, 141), (181, 141), (363, 141), (544, 141),
+                  (0, 281), (181, 281), (363, 281), (544, 281)]
     num_coords = [(first + x , second + y) for first, second in num_coords]
-    x,y=num_coords[0]
+    x,y=num_coords[6]
     pyautogui.click(x, y)
     print(x,y," ",getnumbers(x,y,True))
 #%%
@@ -55,9 +71,9 @@ def getnumbers(x,y,save):
     im = pyautogui.screenshot(region=(x,y, 26, 20))
     # im = pyautogui.screenshot(region=(305, 1085, 508, 270))
 
-    new_Kwidth = im.width +5
-    new_Kheight = im.height + 5
-    nim = Image.new("RGB", (new_Kwidth, new_Kheight), 'white')
+    new_Kwidth = im.width +7
+    new_Kheight = im.height + 7
+    nim = ImageOps.grayscale(Image.new("RGB", (new_Kwidth, new_Kheight), 'white'))
     # Вставляем исходный скриншот в центр нового изображения
     x_offset = (new_Kwidth - im.width) // 2
     y_offset = (new_Kheight - im.height) // 2
@@ -81,11 +97,57 @@ def c():
         print(pyautogui.position())
         time.sleep(2)
 
-def mc(x,y):
-    x += int(4*random())
-    y += int(4*random())
-    pyautogui.moveTo(x, y, 0.3, pyautogui.easeInQuad)
+speeds = ['slow','medium','fast']
+def mc(x,y,strict=False,retrace=False):
+    # speedChoice = int(random.random()*5)
+    # speed = 'medium'
+    # match speedChoice:
+    #     # case 0:
+    #     #     speed = 'slowest'
+    #     case 1:
+    #         speed = 'slow'
+    #     case 2:
+    #         speed = 'medium'
+    #     case 3:
+    #         speed = 'fast'
+    #     case 4:
+    #         speed = 'fastest'
+    speed = random.choice(speeds)
+    mouse.move_to((x,y), mouseSpeed=speed, knotsCount=1)
     pyautogui.click(x, y)
+    x = random.randint(100, 820) #int(820 * random())
+    y = random.randint(1145, 1545) #int(1545 * random())
+    speed = random.choice(speeds)
+    mouse.move_to((x,y), mouseSpeed=speed, knotsCount=1)
+
+# def mc(x,y,strict=False,retrace=False):
+#     startPosition = pyautogui.position()
+#     if not strict:
+#         x += int(4 * random())
+#         y += int(4 * random())
+#         choice = int(random()*5)
+#         duration = random()*2
+#         if choice == 1:
+#             pyautogui.moveTo(x, y, duration, pyautogui.easeInQuad)
+#         elif choice == 2:
+#             pyautogui.moveTo(x, y, duration, pyautogui.easeInQuad)
+#         elif choice == 3:
+#             pyautogui.moveTo(x, y, duration, pyautogui.easeInOutQuad)
+#         elif choice == 4:
+#             pyautogui.moveTo(x, y, duration, pyautogui.easeInBounce)
+#         elif choice == 5:
+#             pyautogui.moveTo(x, y, duration, pyautogui.easeInElastic)
+#     else:
+#         pyautogui.moveTo(x, y, 0.2)
+#     pyautogui.click(x, y)
+#     if retrace:
+#         yes_no = random()*0.5
+#         if yes_no > 0.5:
+#             x,y = startPosition
+#             x += int(4 * random())
+#             y += int(4 * random())
+#             pyautogui.moveTo(x, y, 0.3)
+
 #%%%
 def check_bonus_time(x,y):
     im = pyautogui.screenshot(region=(x, y, 3, 3))
@@ -108,6 +170,9 @@ def check_bonus_cat(x,y):
         mc(x=551, y=1540)
         # print(f"Цвет пикселя на позиции ({x}, {y}) - {pixel_color}")
         mc(x=777, y=364)
+        cats = read_cats()
+        find(cats)
+
 
 
 #%%
@@ -121,7 +186,7 @@ def read_cats():
     # cats =[]
     for n in range(0,12):
         cycles +=1
-        time.sleep(0.5)
+        # time.sleep(0.5)
         # if cycles % 10 != 0 and cats[n].get(n) == 0 : continue
         x,y = num_coords[n]
         number = getnumbers(x, y,False)
@@ -136,8 +201,25 @@ def read_cats():
 #%%
 def breed(x1,y1,x2,y2):
     # pyautogui.moveTo(,0.3, pyautogui.easeInQuad)
-    mc(x1-10, y1+10)
-    pyautogui.dragTo(x2-10, y2+10, 0.5, pyautogui.easeInQuad, button='left')
+    # mc(x1-20, y1+50)
+    speed = random.choice(speeds)
+    mouse.move_to((x1-20, y1+50), mouseSpeed=speed, knotsCount=1)
+    # pyautogui.dragTo(x2-10, y2+10, 0.5, pyautogui.easeInQuad, button='left')
+    speedChoice = int(random.random()*5)
+    speed = 'medium'
+    match speedChoice:
+        # case 0:
+        #     speed = 'slowest'
+        case 1:
+            speed = 'slow'
+        case 2:
+            speed = 'medium'
+        # case 3:
+        #     speed = 'fast'
+        # case 4:
+        #     speed = 'fastest'
+    mouse.drag_to(x1-20,y1+50,x2-20,y2+50, mouseSpeed=speed, knotsCount=1)
+
 
 #%%
 def find_and_breed(cats):
@@ -251,6 +333,24 @@ def check_duck(hay):
         mc(x, y)
         acceptBonus()
 
+def restart():
+    mc(41,129) # cross
+    mc(610, 1046)  # confirm
+    mc(91, 1832)  # run
+    time.sleep(4)
+
+
+start_time = dt.now()
+def check_restart():
+    global start_time
+    now = dt.now()
+    timePassed = now-start_time
+    print(f'time passed: {int(timePassed.total_seconds())}')
+    rt =random.randint(100,500)
+    if (timePassed.seconds+rt)//1000 >= 1:
+        print('retarting..')
+        restart()
+        start_time = dt.now()
 
 #%%
 def main():
@@ -261,12 +361,15 @@ def main():
     cats=init()
 
     while 1==1 :
+        mc(435,1390,False,True)
+        mc(257, 1358,False,True) # anti-offline
+        check_bonus_time(277,1727)
         cats = read_cats()
-        mc(435,1390)  # close
         find(cats)
-        check_bonus_cat(685,1720)
-        check_bonus_time(289,1716)
-        mc(255,1307)
+        check_bonus_cat(671,1718)
+        mc(428,1307,False,True)
+        time.sleep(10)
+        check_restart()
 
 #%%
 if __name__ == '__main__':
