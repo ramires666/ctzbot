@@ -366,9 +366,10 @@ def check_restart():
     now = dt.now()
     timePassed = now-start_time
     print(f'time passed: {int(timePassed.total_seconds())}')
-    # rt =random.randint(200,2000)
-    rt = random.randint(100, 200)
+    rt =random.randint(200,2000)
+    # rt = random.randint(100, 200)
     if (timePassed.seconds+rt)//3000 >= 1:
+    # if (timePassed.seconds + rt) // 130 >= 1:
         print('retarting..')
         restart()
         start_time = dt.now()
@@ -382,8 +383,9 @@ def main():
     cats=init()
 
     while 1==1 :
-        mc(253, 1238, False, True)
+        # mc(253, 1238, False, True)
         mc(435,1390,False,True)
+        time.sleep(.2)
         mc(257, 1378,False,True) # anti-offline
         check_bonus_time(554,1045)
         cats = read_cats()
