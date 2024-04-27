@@ -20,7 +20,7 @@ num_coords = [(0, 0), (182, 0), (364, 0), (545, 0),
               (0, 280), (182, 280), (364, 280), (545, 280)]
 cycles = 1
 
-#%%
+
 mouse = MouseUtils()
 # cords = (500, 500)
 # mouse.move_to(cords, mouseSpeed='slow', knotsCount=1)
@@ -33,7 +33,7 @@ mouse = MouseUtils()
 # pyautogui.PAUSE = 0  # Default: 0.1
 
 
-#%%
+
 def loadImage(path):
     needleFileObj = open(path, 'rb')
     needleImage = Image.open(needleFileObj)
@@ -54,13 +54,13 @@ duck2  = duck.transpose(method=Image.FLIP_LEFT_RIGHT)
 #%%
 def initcoords(num_coords):
 #%%
-    x = 187
-    y= 1156
-    num_coords = [(0, 0), (181, 0), (363, 0), (544, 0),
-                  (0, 141), (181, 141), (363, 141), (544, 141),
-                  (0, 281), (181, 281), (363, 281), (544, 281)]
+    x = 179
+    y= 1155
+    num_coords = [(0, 0), (178, 0), (356, 0), (534, 0),
+                  (0, 138), (178, 138), (356, 138), (534, 138),
+                  (0, 276), (178, 276), (356, 276), (534, 276)]
     num_coords = [(first + x , second + y) for first, second in num_coords]
-    x,y=num_coords[6]
+    x,y=num_coords[11]
     pyautogui.click(x, y)
     print(x,y," ",getnumbers(x,y,True))
 #%%
@@ -68,7 +68,7 @@ def initcoords(num_coords):
 #%%
 # im = pyautogui.screenshot(region=(205,760, 18, 16))
 def getnumbers(x,y,save):
-    im = pyautogui.screenshot(region=(x,y, 26, 20))
+    im = pyautogui.screenshot(region=(x,y, 27, 20))
     # im = pyautogui.screenshot(region=(305, 1085, 508, 270))
 
     new_Kwidth = im.width +7
@@ -91,7 +91,7 @@ def getnumbers(x,y,save):
     return pytesseract.image_to_string(enhanced_image, config=custom_config).strip()
 
 
-#%%
+
 def c():
     while 1==1:
         print(pyautogui.position())
@@ -113,7 +113,7 @@ def mc(x,y,strict=False,retrace=False):
     #     case 4:
     #         speed = 'fastest'
     speed = random.choice(speeds)
-    mouse.move_to((x,y), mouseSpeed=speed, knotsCount=1)
+    mouse.move_to((x,y), mouseSpeed=speed, knotsCount=3)
     pyautogui.click(x, y)
     x = random.randint(100, 820) #int(820 * random())
     y = random.randint(1145, 1545) #int(1545 * random())
@@ -148,7 +148,7 @@ def mc(x,y,strict=False,retrace=False):
 #             y += int(4 * random())
 #             pyautogui.moveTo(x, y, 0.3)
 
-#%%%
+
 def check_bonus_time(x,y):
     im = pyautogui.screenshot(region=(x, y, 3, 3))
     pixel_color = im.getpixel((1, 1))
@@ -160,7 +160,7 @@ def check_bonus_time(x,y):
         mc(x=x, y=y)  # open
         mc(x=273, y=1318)  # click
         mc(x=777, y=364)
-#%%
+
 def check_bonus_cat(x,y):
     im = pyautogui.screenshot(region=(x, y, 3, 3))
     pixel_color = im.getpixel((1, 1))
@@ -175,11 +175,11 @@ def check_bonus_cat(x,y):
 
 
 
-#%%
+
 def init():
     initAnimals()
     return [{n:0} for n in range(12)]
-#%%
+
 # start = timeit.default_timer()
 def read_cats():
     global cycles
@@ -198,7 +198,7 @@ def read_cats():
 
     return cats
 
-#%%
+
 def breed(x1,y1,x2,y2):
     # pyautogui.moveTo(,0.3, pyautogui.easeInQuad)
     # mc(x1-20, y1+50)
@@ -221,7 +221,7 @@ def breed(x1,y1,x2,y2):
     mouse.drag_to(x1-20,y1+50,x2-20,y2+50, mouseSpeed=speed, knotsCount=1)
 
 
-#%%
+
 def find_and_breed(cats):
     sorted_data = sorted(cats, key=lambda x: int(list(x.values())[0]))
     for n in range(1,len(sorted_data)):
@@ -239,7 +239,7 @@ def bonus_check():
     check_duck(hay)
 
 
-#%%
+
 def find(data):
     # Множество для отслеживания уникальных комбинаций (без учёта порядка)
     global cats
@@ -261,13 +261,14 @@ def find(data):
             for pair in pairs:
                 print(f"Парны: {pair[0]} и {pair[1]}")
                 breed(*num_coords[pair[0]], *num_coords[pair[1]])
+                mouse.rnd(100)
                 # bonus_check()
                 # pyautogui.click(x=516, y=1340)
                 data[pair[0]] = {pair[0]:0}
                 data[pair[1]] = {pair[1]:data[pair[1]][pair[1]] +1}
         else: break
 
-#%%
+
 def loc(needls,hay):
     x=0
     y=0
@@ -302,7 +303,7 @@ def check_shiba(hay):
         acceptBonus()
 
 def check_pepe(hay):
-    #%%
+
     print('check 4 bonus')
     global dir,pepe,pepe2
     # hay = getHay()
@@ -319,7 +320,7 @@ def check_pepe(hay):
 
 
 def check_duck(hay):
-    #%%
+
     global dir,duck,duck2
     # hay = getHay()
     x,y = loc(duck,hay)
@@ -334,10 +335,10 @@ def check_duck(hay):
         acceptBonus()
 
 def restart():
-    mc(41,129) # cross
-    mc(610, 1046)  # confirm
-    mc(91, 1832)  # run
-    time.sleep(4)
+    # mc(41,129) # cross
+    # mc(610, 1046)  # confirm
+    # mc(91, 1832)  # run
+    time.sleep(9)
 
 
 start_time = dt.now()
@@ -346,8 +347,8 @@ def check_restart():
     now = dt.now()
     timePassed = now-start_time
     print(f'time passed: {int(timePassed.total_seconds())}')
-    rt =random.randint(100,500)
-    if (timePassed.seconds+rt)//1000 >= 1:
+    rt =random.randint(200,2000)
+    if (timePassed.seconds+rt)//3000 >= 1:
         print('retarting..')
         restart()
         start_time = dt.now()
@@ -361,15 +362,18 @@ def main():
     cats=init()
 
     while 1==1 :
+        mc(253, 1238, False, True)
         mc(435,1390,False,True)
-        mc(257, 1358,False,True) # anti-offline
-        check_bonus_time(277,1727)
+        mc(257, 1378,False,True) # anti-offline
+        check_bonus_time(270,1711)
         cats = read_cats()
         find(cats)
-        check_bonus_cat(671,1718)
+        check_bonus_cat(653,1711)
         mc(428,1307,False,True)
         time.sleep(10)
         check_restart()
+        if sum([sum(c.values()) for c in cats]) == 0: restart() #antipizdets
+
 
 #%%
 if __name__ == '__main__':

@@ -120,6 +120,12 @@ class MouseUtils:
         # Release the mouse button at the destination
         pag.mouseUp(x=x2, y=y2)
 
+    def rnd(self, rang):
+        start_x, start_y = pag.position()
+        x = rd.randint(rang,rang)
+        y = rd.randint(rang,rang)
+        self.move_to((start_x+x, start_y+y), mouseSpeed='slow', knotsCount=1)
+
 
 
 '''
