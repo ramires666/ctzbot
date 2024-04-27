@@ -55,12 +55,12 @@ duck2  = duck.transpose(method=Image.FLIP_LEFT_RIGHT)
 def initcoords(num_coords):
 #%%
     x = 179
-    y= 1155
+    y= 1154
     num_coords = [(0, 0), (178, 0), (356, 0), (534, 0),
                   (0, 138), (178, 138), (356, 138), (534, 138),
                   (0, 276), (178, 276), (356, 276), (534, 276)]
     num_coords = [(first + x , second + y) for first, second in num_coords]
-    x,y=num_coords[11]
+    x,y=num_coords[1]
     pyautogui.click(x, y)
     print(x,y," ",getnumbers(x,y,True))
 #%%
@@ -99,54 +99,16 @@ def c():
 
 speeds = ['slow','medium','fast']
 def mc(x,y,strict=False,retrace=False):
-    # speedChoice = int(random.random()*5)
-    # speed = 'medium'
-    # match speedChoice:
-    #     # case 0:
-    #     #     speed = 'slowest'
-    #     case 1:
-    #         speed = 'slow'
-    #     case 2:
-    #         speed = 'medium'
-    #     case 3:
-    #         speed = 'fast'
-    #     case 4:
-    #         speed = 'fastest'
     speed = random.choice(speeds)
-    mouse.move_to((x,y), mouseSpeed=speed, knotsCount=3)
+    knots = random.choice(range(1,7))
+    mouse.move_to((x,y), mouseSpeed=speed, knotsCount=knots)
     pyautogui.click(x, y)
     x = random.randint(100, 820) #int(820 * random())
     y = random.randint(1145, 1545) #int(1545 * random())
     speed = random.choice(speeds)
-    mouse.move_to((x,y), mouseSpeed=speed, knotsCount=1)
+    knots = random.choice(range(1, 7))
+    mouse.move_to((x,y), mouseSpeed=speed, knotsCount=knots)
 
-# def mc(x,y,strict=False,retrace=False):
-#     startPosition = pyautogui.position()
-#     if not strict:
-#         x += int(4 * random())
-#         y += int(4 * random())
-#         choice = int(random()*5)
-#         duration = random()*2
-#         if choice == 1:
-#             pyautogui.moveTo(x, y, duration, pyautogui.easeInQuad)
-#         elif choice == 2:
-#             pyautogui.moveTo(x, y, duration, pyautogui.easeInQuad)
-#         elif choice == 3:
-#             pyautogui.moveTo(x, y, duration, pyautogui.easeInOutQuad)
-#         elif choice == 4:
-#             pyautogui.moveTo(x, y, duration, pyautogui.easeInBounce)
-#         elif choice == 5:
-#             pyautogui.moveTo(x, y, duration, pyautogui.easeInElastic)
-#     else:
-#         pyautogui.moveTo(x, y, 0.2)
-#     pyautogui.click(x, y)
-#     if retrace:
-#         yes_no = random()*0.5
-#         if yes_no > 0.5:
-#             x,y = startPosition
-#             x += int(4 * random())
-#             y += int(4 * random())
-#             pyautogui.moveTo(x, y, 0.3)
 
 
 def check_bonus_time(x,y):
@@ -167,6 +129,7 @@ def check_bonus_cat(x,y):
     if pixel_color == (242, 67, 67):
         print(f'BONUS CAT!')
         mc(x, y)
+
         mc(x=551, y=1540)
         # print(f"Цвет пикселя на позиции ({x}, {y}) - {pixel_color}")
         mc(x=777, y=364)
@@ -198,12 +161,56 @@ def read_cats():
 
     return cats
 
+def check_first_cat():
+    global cycles,cars
+    # cats =[]
+    n2read = None
+    for catN in range(0,12):
+        # print(cats[catN][catN])
+        if cats[catN][catN] == 0:
+            print(catN)
+            n2read = catN
+            break
+    if n2read:
+        x, y = num_coords[n2read]
+        number = getnumbers(x, y, False)
+        try: number=int(number)
+        except: number = 0
+        if number != 0:
+            print(f'EXTRA n={n2read} = {number}')
+            cats[n2read] = {n2read: number}
+            find(cats)
+
+
+    # for n in range(0,12):
+    #     cycles +=1
+    #     x,y = num_coords[n]
+    #     print(f"{n},{x},{y}")
+    #     # number = getnumbers(x, y,False)
+    #     # try: number=int(number)
+    #     # except: number = 0
+    #     # print(f'n={n} = {number}')
+    #     # cats[n]={n:number}
+    #     # find(cats)
+
+    return cats
+
+
 
 def breed(x1,y1,x2,y2):
     # pyautogui.moveTo(,0.3, pyautogui.easeInQuad)
     # mc(x1-20, y1+50)
+    x_displacement = random.choice(range(1, 30))
+    y_displacement = random.choice(range(1, 50))
+    from_ = (x1-x_displacement, y1+y_displacement, )
+
+    x_displacement = random.choice(range(1, 30))
+    y_displacement = random.choice(range(1, 50))
+    to_ = (x2-x_displacement, y2+y_displacement, )
+
     speed = random.choice(speeds)
-    mouse.move_to((x1-20, y1+50), mouseSpeed=speed, knotsCount=1)
+    knots = random.choice(range(1, 8))
+    mouse.move_to(from_, mouseSpeed=speed, knotsCount=knots)
     # pyautogui.dragTo(x2-10, y2+10, 0.5, pyautogui.easeInQuad, button='left')
     speedChoice = int(random.random()*5)
     speed = 'medium'
@@ -214,11 +221,19 @@ def breed(x1,y1,x2,y2):
             speed = 'slow'
         case 2:
             speed = 'medium'
-        # case 3:
-        #     speed = 'fast'
+        case 3:
+            speed = 'fast'
         # case 4:
         #     speed = 'fastest'
-    mouse.drag_to(x1-20,y1+50,x2-20,y2+50, mouseSpeed=speed, knotsCount=1)
+    # mouse.drag_to(x1-20,y1+50,x2-20,y2+50, mouseSpeed=speed, knotsCount=1)
+
+    order = random.choice(range(0, 2))
+    if order ==1:
+        # print(f'order = {order}')
+        from_,to_ = to_,from_
+        mouse.move_to(from_, mouseSpeed=speed, knotsCount=knots)
+    mouse.drag_to(*from_, *to_, mouseSpeed=speed, knotsCount=1)
+    return order
 
 
 
@@ -260,12 +275,16 @@ def find(data):
         if pairs:
             for pair in pairs:
                 print(f"Парны: {pair[0]} и {pair[1]}")
-                breed(*num_coords[pair[0]], *num_coords[pair[1]])
+                order = breed(*num_coords[pair[0]], *num_coords[pair[1]])
                 mouse.rnd(100)
                 # bonus_check()
                 # pyautogui.click(x=516, y=1340)
-                data[pair[0]] = {pair[0]:0}
-                data[pair[1]] = {pair[1]:data[pair[1]][pair[1]] +1}
+                if order == 1:
+                    data[pair[1]] = {pair[1]: 0}
+                    data[pair[0]] = {pair[0]: data[pair[0]][pair[0]] + 1}
+                else:
+                    data[pair[0]] = {pair[0]:0}
+                    data[pair[1]] = {pair[1]:data[pair[1]][pair[1]] +1}
         else: break
 
 
@@ -335,9 +354,9 @@ def check_duck(hay):
         acceptBonus()
 
 def restart():
-    # mc(41,129) # cross
-    # mc(610, 1046)  # confirm
-    # mc(91, 1832)  # run
+    mc(41,129) # cross
+    mc(610, 1046)  # confirm
+    mc(91, 1832)  # run
     time.sleep(9)
 
 
@@ -347,7 +366,8 @@ def check_restart():
     now = dt.now()
     timePassed = now-start_time
     print(f'time passed: {int(timePassed.total_seconds())}')
-    rt =random.randint(200,2000)
+    # rt =random.randint(200,2000)
+    rt = random.randint(100, 200)
     if (timePassed.seconds+rt)//3000 >= 1:
         print('retarting..')
         restart()
@@ -365,11 +385,12 @@ def main():
         mc(253, 1238, False, True)
         mc(435,1390,False,True)
         mc(257, 1378,False,True) # anti-offline
-        check_bonus_time(270,1711)
+        check_bonus_time(554,1045)
         cats = read_cats()
         find(cats)
         check_bonus_cat(653,1711)
         mc(428,1307,False,True)
+        check_first_cat()
         time.sleep(10)
         check_restart()
         if sum([sum(c.values()) for c in cats]) == 0: restart() #antipizdets
