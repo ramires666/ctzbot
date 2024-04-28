@@ -161,7 +161,7 @@ def read_cats():
 
     return cats
 
-def check_first_cat():
+def check_empty_cats():
     global cycles,cars
     # cats =[]
     n2read = None
@@ -170,16 +170,16 @@ def check_first_cat():
         if cats[catN][catN] == 0:
             print(catN)
             n2read = catN
-            break
-    if n2read:
-        x, y = num_coords[n2read]
-        number = getnumbers(x, y, False)
-        try: number=int(number)
-        except: number = 0
-        if number != 0:
-            print(f'EXTRA n={n2read} = {number}')
-            cats[n2read] = {n2read: number}
-            find(cats)
+            # break
+    # if n2read:
+            x, y = num_coords[n2read]
+            number = getnumbers(x, y, False)
+            try: number=int(number)
+            except: number = 0
+            if number != 0:
+                print(f'EXTRA n={n2read} = {number}')
+                cats[n2read] = {n2read: number}
+                find(cats)
 
 
     # for n in range(0,12):
@@ -227,8 +227,8 @@ def breed(x1,y1,x2,y2):
         #     speed = 'fastest'
     # mouse.drag_to(x1-20,y1+50,x2-20,y2+50, mouseSpeed=speed, knotsCount=1)
 
-    order = random.choice(range(0, 2))
-    if order ==1:
+    order = random.choice(range(0, 3))
+    if order == 2:
         # print(f'order = {order}')
         from_,to_ = to_,from_
         mouse.move_to(from_, mouseSpeed=speed, knotsCount=knots)
@@ -279,7 +279,7 @@ def find(data):
                 mouse.rnd(100)
                 # bonus_check()
                 # pyautogui.click(x=516, y=1340)
-                if order == 1:
+                if order == 2:
                     data[pair[1]] = {pair[1]: 0}
                     data[pair[0]] = {pair[0]: data[pair[0]][pair[0]] + 1}
                 else:
@@ -386,16 +386,22 @@ def main():
         # mc(253, 1238, False, True)
         mc(435,1390,False,True)
         time.sleep(.2)
-        mc(257, 1378,False,True) # anti-offline
+        mc(291, 1268,False,True) # anti-offline
+        time.sleep(.5)
+        mc(291, 1268,False,True) # anti-offline
         check_bonus_time(554,1045)
         cats = read_cats()
         find(cats)
         check_bonus_cat(653,1711)
-        mc(428,1307,False,True)
-        check_first_cat()
+        # mc(428,1307,False,True)
+        check_empty_cats()
         time.sleep(10)
         check_restart()
-        if sum([sum(c.values()) for c in cats]) == 0: restart() #antipizdets
+        totalCats = sum([sum(c.values()) for c in cats])
+        if totalCats  == 0:
+            print(f'totalCats={totalCats}')
+            mc(85,16)
+            mc(62, 1340)
 
 
 #%%
